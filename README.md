@@ -1,39 +1,60 @@
-🔍 Project Overview
+# 🔍 RECAP: Retrieval-Augmented Question Answering System
 
-RECAP is a Retrieval-Augmented Generation (RAG) based question answering system built on the RAG-12000 dataset, which consists of context-question-answer triplets. This project focuses on improving the retriever component using fine-tuning strategies and evaluating how enhanced retrieval impacts answer quality.
+**RECAP** is a Retrieval-Augmented Generation (RAG)-based question answering system built on the **RAG-12000** dataset. It focuses on enhancing the **retriever component** through fine-tuning strategies and evaluates how improved retrieval quality impacts the final answers.
 
-🧠 Key Components
+---
 
-📖 Dataset
-	•	RAG-12000: A structured dataset with triplets: context, question, answer.
+## 🧠 Key Components
 
-🔗 Model Architecture
-	•	Retriever: Sentence Transformers (all-MiniLM-L6-v2) enhanced with a projection head.
-	•	Fine-Tuning Strategies:
-	•	LoRA (Low-Rank Adaptation)
-	•	Partial Layer Freezing
-	•	Generator: T5 model with retrieved context + question as input.
+### 📖 Dataset
+- **RAG-12000**: A structured dataset of triplets — `context`, `question`, and `answer`.
 
+### 🔗 Model Architecture
 
- ⚙️ Methodology
-	1.	Retriever-Generator Pipeline:
-  		•	The context passages from the RAG-12000 dataset are preprocessed and broken into smaller chunks (approx. 300 characters each) to improve the 				granularity of retrieval.
-	  	•	These chunks are embedded using a Sentence Transformer (all-MiniLM-L6-v2) to better align with the question embeddings.
-	  	•	Given a question, the retriever searches over the encoded chunks using FAISS to find the most relevant context.
-	  	•	The retrieved chunk and the corresponding question are passed as input to a T5 model to generate the final answer.
-	2.	Retriever Fine-Tuning Techniques:
-	  	•	LoRA: Adds small trainable low-rank matrices to reduce the number of trainable parameters and improve efficiency.
-	  	•	Partial Layer Freezing: Unfreezes only the bottom layers of the Sentence Transformer, allowing task-specific adaptation while keeping most of the 			pretrained model fixed.
-	3.	Training Configurations:
-	  	•	LoRA: Trained for 3 epochs with a learning rate of 5e-5 and batch size of 16.
-	  	•	Partial Freezing: Trained for 10 epochs with a learning rate of 2e-5 and batch size of 64.
+- **Retriever**:  
+  `Sentence Transformers (all-MiniLM-L6-v2)` with a **projection head** for better question-context alignment.
+  
+- **Fine-Tuning Techniques**:  
+  - **LoRA** (Low-Rank Adaptation)  
+  - **Partial Layer Freezing**
 
+- **Generator**:  
+  `T5 model` that takes `[retrieved context + question]` as input to generate the answer.
 
-Results
+---
 
-Model Accuracy retrival for Top-5.
+## ⚙️ Methodology
 
-Partial Layer Freezing : 0.93
-LoRA Fine-Tuning : 0.90
-Baseline (MiniLM) : 0.89
-Projection Head Only : 0.002
+### 1. Retriever-Generator Pipeline
+- Contexts are chunked (~300 characters each) to enhance retrieval granularity.
+- Each chunk is embedded using `all-MiniLM-L6-v2`.
+- FAISS is used for **similarity-based retrieval** over the encoded chunks.
+- The top retrieved chunk + question is passed to the **T5 generator** for answer generation.
+
+### 2. Retriever Fine-Tuning
+- **LoRA**:  
+  Adds small trainable low-rank matrices → efficient training with fewer parameters.
+  
+- **Partial Layer Freezing**:  
+  Only bottom layers of the Sentence Transformer are unfrozen → balances performance and efficiency.
+
+### 3. Training Configurations
+
+| Strategy             | Epochs | Learning Rate | Batch Size |
+|----------------------|--------|----------------|------------|
+| LoRA                 | 3      | 5e-5           | 16         |
+| Partial Layer Freezing | 10     | 2e-5           | 64         |
+
+---
+
+## 📊 Results: Retrieval Accuracy (Top-5)
+
+| Model Variant            | Accuracy |
+|--------------------------|----------|
+| Partial Layer Freezing   | **0.93** |
+| LoRA Fine-Tuning         | 0.90     |
+| Baseline (MiniLM)        | 0.89     |
+| Projection Head Only     | 0.002    |
+
+---
+
