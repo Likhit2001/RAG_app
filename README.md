@@ -16,6 +16,8 @@ RECAP is a Retrieval-Augmented Generation (RAG) based question answering system 
 
 
  ⚙️ Methodology
+
+ 
 	1.	Retriever-Generator Pipeline:
   	•	The context passages from the RAG-12000 dataset are preprocessed and broken into smaller chunks (approx. 300 characters each) to improve the granularity of retrieval.
   	•	These chunks are embedded using a Sentence Transformer (all-MiniLM-L6-v2) to better align with the question embeddings.
